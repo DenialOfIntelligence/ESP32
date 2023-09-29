@@ -18,7 +18,7 @@
 AsyncWebServer server(80);
 
 const char* ssid = "*******";
-const char* password = "*******";
+const char* password = "********";
 
 const char* PARAM_MESSAGE = "message";
 
@@ -32,24 +32,24 @@ void setup() {
     Serial.begin(115200);
     WiFi.mode(WIFI_STA);
     WiFi.begin(ssid, password);
-    if (WiFi.waitForConnectResult() != WL_CONNECTED) {
-        Serial.printf("WiFi Failed!\n");
-        return;
-    }
-
+    while (WiFi.status() != WL_CONNECTED) {
+      delay(500);
+      Serial.print(".");
+  }
+    Serial.println("Connected");
     Serial.print("IP Address: ");
     Serial.println(WiFi.localIP());
 
     server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
-        request->send(200, "text/html", "<a href=\"/on\">Turn the LED ON</a><a href=\"/off\">Turn the LED OFF</a>");
+        request->send(200, "text/html", "<button onclick=\"fetch('http://192.168.178.198/on')\">Turn LED ON</button> <button onclick=\"fetch('http://192.168.178.198/off')\">Turn LED OFF</button>");
     });
     server.on("/on", HTTP_GET, [](AsyncWebServerRequest *request){
-        request->send(200, "text/html", "<a href=\"/on\">Turn the LED ON</a><a href=\"/off\">Turn the LED OFF</a>");
         digitalWrite(LED_BUILTIN, HIGH);
+        request->send(200, "text/plain", "Was there ever anything here?");
     });
     server.on("/off", HTTP_GET, [](AsyncWebServerRequest *request){
-        request->send(200, "text/html", "<a href=\"/on\">Turn the LED ON</a><a href=\"/off\">Turn the LED OFF</a>");
         digitalWrite(LED_BUILTIN, LOW);
+        request->send(200, "text/plain", "Was there ever anything here?");
     });
 
     // Send a GET request to <IP>/get?message=<message>
