@@ -6,6 +6,13 @@ AsyncWebServer server(80);
 Start the Web Server on port 80
 
 ```
+void notFound(AsyncWebServerRequest *request) {
+    request->send(404, "text/plain", "Not found");
+}
+```
+This will handle requests on wrong uri's with this code `server.onNotFound(notFound);`
+
+```
 WiFi.begin(ssid, password);
   if (WiFi.waitForConnectResult() != WL_CONNECTED) {
     Serial.printf("WiFi Failed!\n");
