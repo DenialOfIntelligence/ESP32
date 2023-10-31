@@ -51,6 +51,8 @@ void setup() {
         digitalWrite(LED_BUILTIN, LOW);
         request->send(200, "text/plain", "Was there ever anything here?");
     });
+    
+    server.onNotFound(notFound);
 
 
     server.begin();
